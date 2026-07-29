@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GDFZ</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>导航与卡片页面</title>
     <style>
         /* 基础重置 */
         * {
@@ -32,14 +31,12 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* 导航栏左侧字母 ABC */
         .nav-left {
             font-size: 24px;
             font-weight: bold;
             letter-spacing: 2px;
         }
 
-        /* 导航栏右侧链接 */
         .nav-right a {
             color: #ecf0f1;
             text-decoration: none;
@@ -52,12 +49,12 @@
             color: #3498db;
         }
 
-        /* 页面主体内容区（用于居中卡片） */
+        /* 页面主体内容区 */
         .main-container {
-            flex: 1; /* 占据屏幕剩余高度 */
+            flex: 1;
             display: flex;
-            justify-content: center; /* 水平居中 */
-            align-items: center;     /* 垂直居中 */
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
 
@@ -65,10 +62,10 @@
         .card {
             background-color: white;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px; /* 稍微加宽一点以适应九宫格 */
             padding: 40px 30px;
-            border-radius: 20px; /* 圆角设计 */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* 柔和的阴影 */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             text-align: center;
         }
 
@@ -83,21 +80,32 @@
             line-height: 1.5;
         }
 
-        /* 按钮样式（本质是链接伪装成按钮） */
+        /* 3x3 按钮阵列 (CSS Grid) */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3列，均分宽度 */
+            gap: 15px; /* 按钮之间的间距 */
+        }
+
+        /* 按钮样式（九宫格版） */
         .btn {
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-color: #3498db;
             color: white;
             text-decoration: none;
-            padding: 12px 30px;
-            border-radius: 50px; /* 胶囊型圆角按钮 */
+            padding: 20px 0; /* 增加高度让按钮接近方形 */
+            border-radius: 12px; /* 减小圆角，使其更贴合阵列布局 */
             font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .btn:hover {
             background-color: #2980b9;
-            transform: translateY(-2px); /* 悬浮时按钮微微上浮 */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); /* 悬浮时增加一点发光阴影 */
         }
     </style>
 </head>
@@ -105,9 +113,8 @@
 
     <!-- 标题导航栏 -->
     <nav class="navbar">
-        <div class="nav-left">GDFZ</div>
+        <div class="nav-left">ABC</div>
         <div class="nav-right">
-            <!-- target="_blank" 用于在新标签页中打开链接 -->
             <a href="https://www.luogu.com.cn" target="_blank">洛谷</a>
             <a href="https://www.baidu.com" target="_blank">百度</a>
         </div>
@@ -115,12 +122,22 @@
 
     <!-- 中间内容区域 -->
     <div class="main-container">
-        <!-- 圆角卡片 -->
         <div class="card">
-            <h2>欢迎来到 GDFZ WEBS</h2>
-            <p>友链</p>
-            <!-- 替换 href 里面的链接为你想要跳转的地址 -->
-            <a href="https://www.vjudge.net" class="btn" target="_blank">VJudge</a>
+            <h2>功能面板</h2>
+            <p>请选择你需要访问的模块（3x3 阵列）：</p>
+            
+            <!-- 3x3 按钮阵列 -->
+            <div class="button-grid">
+                <a href="#link1" class="btn">选项 1</a>
+                <a href="#link2" class="btn">选项 2</a>
+                <a href="#link3" class="btn">选项 3</a>
+                <a href="#link4" class="btn">选项 4</a>
+                <a href="#link5" class="btn">选项 5</a>
+                <a href="#link6" class="btn">选项 6</a>
+                <a href="#link7" class="btn">选项 7</a>
+                <a href="#link8" class="btn">选项 8</a>
+                <a href="#link9" class="btn">选项 9</a>
+            </div>
         </div>
     </div>
 
