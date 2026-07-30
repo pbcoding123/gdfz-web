@@ -116,7 +116,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             border: 1px solid #f0f0f0;
             text-align: center;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
         }
 
@@ -268,7 +268,8 @@
                 <span>最高分: <span id="high-score">0</span></span>
             </div>
             
-            <canvas id="snakeCanvas" width="400" height="400"></canvas>
+            <!-- 地图改大：Canvas 尺寸从 400x400 调整为 500x500 -->
+            <canvas id="snakeCanvas" width="500" height="500"></canvas>
             
             <div class="game-controls-tip">
                 使用键盘上的 <b>方向键 (↑ ↓ ← →)</b> 或 <b>WASD</b> 控制方向
@@ -316,7 +317,7 @@
         const startBtn = document.getElementById('startBtn');
 
         const gridSize = 20;
-        const tileCount = canvas.width / gridSize;
+        const tileCount = canvas.width / gridSize; // 500 / 20 = 25 格（地图变大）
 
         let snake = [];
         let food = { x: 5, y: 5 };
@@ -329,9 +330,9 @@
 
         function initGame() {
             snake = [
-                { x: 10, y: 10 },
-                { x: 9, y: 10 },
-                { x: 8, y: 10 }
+                { x: 12, y: 12 },
+                { x: 11, y: 12 },
+                { x: 10, y: 12 }
             ];
             dx = 1;
             dy = 0;
@@ -343,7 +344,6 @@
         function spawnFood() {
             food.x = Math.floor(Math.random() * tileCount);
             food.y = Math.floor(Math.random() * tileCount);
-            // 确保食物不刷在蛇身上
             snake.forEach(part => {
                 if (part.x === food.x && part.y === food.y) {
                     spawnFood();
@@ -398,11 +398,9 @@
 
         function hasGameEnded() {
             const head = snake[0];
-            // 撞墙
             if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
                 return true;
             }
-            // 撞自己
             for (let i = 1; i < snake.length; i++) {
                 if (head.x === snake[i].x && head.y === snake[i].y) {
                     return true;
@@ -428,7 +426,6 @@
             ctx.fillText("最终得分: " + score, canvas.width / 2, canvas.height / 2 + 25);
         }
 
-        // 键盘控制事件
         document.addEventListener('keydown', changeDirection);
 
         function changeDirection(event) {
@@ -463,10 +460,10 @@
             startBtn.textContent = "游戏进行中...";
             startBtn.disabled = true;
             if (gameInterval) clearInterval(gameInterval);
-            gameInterval = setInterval(main, 100);
+            // 速度改慢：从 100ms 调整为 150ms 刷新一次
+            gameInterval = setInterval(main, 150);
         });
 
-        // 初始渲染一次画布静态画面
         clearCanvas();
         ctx.fillStyle = "#888";
         ctx.font = "18px sans-serif";
