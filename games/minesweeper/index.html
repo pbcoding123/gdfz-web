@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>经典扫雷 - GDFZ WEBS 游戏频道</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* ================= 基础重置 ================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ================= 顶部导航栏 ================= */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+        }
+
+        .nav-brand img {
+            height: 30px;
+            width: auto;
+            border-radius: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 15px;
+            font-weight: 500;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #007aff;
+        }
+        
+        .nav-links a.active {
+            color: #007aff;
+            font-weight: 700;
+        }
+
+        .nav-links .btn-primary {
+            background-color: #007aff;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .nav-links .btn-primary:hover {
+            background-color: #0056b3;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ================= 游戏主体区域 ================= */
+        .game-main {
+            margin-top: 70px;
+            padding: 40px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .game-wrapper {
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .back-to-hall {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #007aff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            align-self: flex-start;
+        }
+        
+        .back-to-hall:hover {
+            text-decoration: underline;
+        }
+
+        .game-container {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 游戏控制面板栏 */
+        .game-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-selector select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            background-color: #fff;
+            font-size: 0.95rem;
+            cursor: pointer;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .status-board {
+            display: flex;
+            gap: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #444;
+            align-items: center;
+        }
+
+        .status-board span {
+            background: #111;
+            color: #00ffcc;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .btn-reset {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-reset:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        /* 扫雷动态网格 */
+        #minefield {
+            display: grid;
+            gap: 2px;
+            background-color: #adb5bd;
+            border: 4px solid #adb5bd;
+            border-radius: 8px;
+            user-select: none;
+            max-width: 100%;
+            overflow: auto;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.15s;
+        }
+
+        .cell:hover {
+            background-color: #dee2e6;
+        }
+
+        .cell.revealed {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            cursor: default;
+        }
+
+        .cell.mine {
+            background-color: #ff6b6b !important;
+            color: white;
+        }
+
+        .cell.flagged {
+            background-color: #e9ecef;
+        }
+
+        /* 数字颜色定义 */
+        .c-1 { color: #0000ff; }
+        .c-2 { color: #008000; }
+        .c-3 { color: #ff0000; }
+        .c-4 { color: #000080; }
+        .c-5 { color: #800000; }
+        .c-6 { color: #008080; }
+        .c-7 { color: #000000; }
+        .c-8 { color: #808080; }
+
+        .game-tips {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* ================= 巨型页脚 ================= */
+        .footer {
+            background-color: #111;
+            color: #a0a0a0;
+            padding: 60px 5% 30px;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid #333;
+            padding-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-brand h2 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links-group h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-links-group ul {
+            list-style: none;
+        }
+
+        .footer-links-group ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links-group a {
+            transition: color 0.3s;
+        }
+
+        .footer-links-group a:hover {
+            color: #007aff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <a href="https://gdfz.dpdns.org" class="nav-brand">
+            <img src="/favicon.ico" alt="Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhZmYiIHJ4PSI4Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkc8L3RleHQ+PC9zdmc+'">
+            GDFZ WEBS
+        </a>
+        <div class="nav-links">
+            <a href="https://gdfz.dpdns.org">首页</a>
+            <a href="games.html" class="active">Games</a>
+            <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="btn-primary">GitHub</a>
+        </div>
+    </nav>
+
+    <!-- 游戏主体 -->
+    <main class="game-main">
+        <div class="game-wrapper" style="width: 100%; max-width: 700px;">
+            <a href="https://gdfz.dpdns.org/games" class="back-to-hall">&larr; 返回游戏大厅</a>
+            <div class="game-container" style="width: 100%;">
+                <h2 style="margin-bottom: 15px; color: #111;">💣 经典扫雷</h2>
+                
+                <!-- 工具栏：模式选择与计数器 -->
+                <div class="game-toolbar">
+                    <div class="difficulty-selector">
+                        <label for="difficulty">难度：</label>
+                        <select id="difficulty">
+                            <option value="easy">简单 (9×9 / 10雷)</option>
+                            <option value="medium">中等 (16×16 / 40雷)</option>
+                            <option value="hard">困难 (30×16 / 99雷)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="status-board">
+                        <div>剩余雷: <span id="mine-count">10</span></div>
+                        <div>时间: <span id="timer">000</span></div>
+                    </div>
+
+                    <button id="resetBtn" class="btn-reset">重新开始</button>
+                </div>
+                
+                <!-- 扫雷网格渲染容器 -->
+                <div id="minefield"></div>
+
+                <div class="game-tips">
+                    <b>操作提示：</b> 左键点击翻开方块，右键点击插旗 (🚩) 标记地雷。
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 巨型页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>GDFZ WEBS</h2>
+                <p>由一群热爱编程与游戏的开发者组成的社区。致力于创造有趣、实用的网络体验。</p>
+            </div>
+            <div class="footer-links-group">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="https://gdfz.dpdns.org">主页</a></li>
+                    <li><a href="games.html">Games 频道</a></li>
+                    <li><a href="https://www.baidu.com" target="_blank">百度搜索</a></li>
+                </ul>
+            </div>
+            <div class="footer-links-group">
+                <h4>联系我们 (DevTeam)</h4>
+                <ul>
+                    <li><a href="mailto:pbcoding123@163.com">pbcoding123@163.com</a></li>
+                    <li><a href="mailto:zhengwenbang20140308@outlook.com">zhengwenbang20140308@outlook.com</a></li>
+                    <li><a href="https://github.com/pbcoding123/gdfz-web" target="_blank">GitHub 仓库</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <a href="https://github.com/pbcoding123/gdfz-web" style="color: #fff;">GDFZ WEBS DevTeam</a> 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <!-- 扫雷核心交互逻辑 -->
+    <script>
+        const configs = {
+            easy: { rows: 9, cols: 9, mines: 10 },
+            medium: { rows: 16, cols: 16, mines: 40 },
+            hard: { rows: 16, cols: 30, mines: 99 }
+        };
+
+        let currentDiff = 'easy';
+        let rows = configs.easy.rows;
+        let cols = configs.easy.cols;
+        let totalMines = configs.easy.mines;
+
+        let board = [];
+        let minesLeft = totalMines;
+        let timeSeconds = 0;
+        let timerInterval = null;
+        let gameOver = false;
+        let gameStarted = false;
+
+        const minefieldEl = document.getElementById('minefield');
+        const mineCountEl = document.getElementById('mine-count');
+        const timerEl = document.getElementById('timer');
+        const resetBtn = document.getElementById('resetBtn');
+        const difficultySelect = document.getElementById('difficulty');
+
+        function initGame() {
+            clearInterval(timerInterval);
+            timeSeconds = 0;
+            timerEl.textContent = "000";
+            gameOver = false;
+            gameStarted = false;
+            minesLeft = totalMines;
+            mineCountEl.textContent = minesLeft;
+
+            minefieldEl.style.gridTemplateColumns = `repeat(${cols}, 30px)`;
+            minefieldEl.innerHTML = '';
+
+            board = [];
+            for (let r = 0; r < rows; r++) {
+                let row = [];
+                for (let c = 0; c < cols; c++) {
+                    let cellData = {
+                        r, c,
+                        mine: false,
+                        revealed: false,
+                        flagged: false,
+                        neighborMines: 0
+                    };
+                    row.push(cellData);
+
+                    let cellEl = document.createElement('div');
+                    cellEl.classList.add('cell');
+                    cellEl.dataset.r = r;
+                    cellEl.dataset.c = c;
+
+                    cellEl.addEventListener('click', () => handleLeftClick(r, c));
+                    cellEl.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        handleRightClick(r, c);
+                    });
+
+                    minefieldEl.appendChild(cellEl);
+                    cellData.element = cellEl;
+                }
+                board.push(row);
+            }
+        }
+
+        function placeMines(firstR, firstC) {
+            let placed = 0;
+            while (placed < totalMines) {
+                let r = Math.floor(Math.random() * rows);
+                let c = Math.floor(Math.random() * cols);
+                // 确保第一点击的位置及其周围没有雷，保证开局安全
+                if (!board[r][c].mine && !(Math.abs(r - firstR) <= 1 && Math.abs(c - firstC) <= 1)) {
+                    board[r][c].mine = true;
+                    placed++;
+                }
+            }
+
+            // 计算每个格子周围的雷数
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (!board[r][c].mine) {
+                        let count = 0;
+                        for (let dr = -1; dr <= 1; dr++) {
+                            for (let dc = -1; dc <= 1; dc++) {
+                                let nr = r + dr, nc = c + dc;
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].mine) {
+                                    count++;
+                                }
+                            }
+                        }
+                        board[r][c].neighborMines = count;
+                    }
+                }
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeSeconds++;
+                if (timeSeconds > 999) timeSeconds = 999;
+                timerEl.textContent = String(timeSeconds).padStart(3, '0');
+            }, 1000);
+        }
+
+        function handleLeftClick(r, c) {
+            if (gameOver || board[r][c].flagged || board[r][c].revealed) return;
+
+            if (!gameStarted) {
+                gameStarted = true;
+                placeMines(r, c);
+                startTimer();
+            }
+
+            if (board[r][c].mine) {
+                // 踩雷，游戏结束
+                revealAllMines();
+                board[r][c].element.classList.add('mine');
+                board[r][c].element.textContent = '💣';
+                endGame(false);
+                return;
+            }
+
+            revealCell(r, c);
+            checkWinCondition();
+        }
+
+        function revealCell(r, c) {
+            let cell = board[r][c];
+            if (cell.revealed || cell.flagged) return;
+
+            cell.revealed = true;
+            cell.element.classList.add('revealed');
+
+            if (cell.neighborMines > 0) {
+                cell.element.textContent = cell.neighborMines;
+                cell.element.classList.add(`c-${cell.neighborMines}`);
+            } else {
+                // 递归展开周围空白格子
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        let nr = r + dr, nc = c + dc;
+                        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                            if (!board[nr][nc].revealed) {
+                                revealCell(nr, nc);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function handleRightClick(r, c) {
+            if (gameOver || !gameStarted || board[r][c].revealed) return;
+
+            let cell = board[r][c];
+            if (!cell.flagged) {
+                if (minesLeft > 0) {
+                    cell.flagged = true;
+                    cell.element.textContent = '🚩';
+                    cell.element.classList.add('flagged');
+                    minesLeft--;
+                }
+            } else {
+                cell.flagged = false;
+                cell.element.textContent = '';
+                cell.element.classList.remove('flagged');
+                minesLeft++;
+            }
+            mineCountEl.textContent = minesLeft;
+        }
+
+        function revealAllMines() {
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (board[r][c].mine) {
+                        board[r][c].element.classList.add('mine', 'revealed');
+                        board[r][c].element.textContent = '💣';
+                    }
+                }
+            }
+        }
+
+        function checkWinCondition() {
+            let won = true;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (!board[r][c].mine && !board[r][c].revealed) {
+                        won = false;
+                        break;
+                    }
+                }
+                if (!won) break;
+            }
+
+            if (won) {
+                endGame(true);
+            }
+        }
+
+        function endGame(won) {
+            gameOver = true;
+            clearInterval(timerInterval);
+            if (won) {
+                alert(`🎉 恭喜你成功通关！用时: ${timeSeconds} 秒`);
+            } else {
+                alert('💥 很遗憾，踩到雷了！游戏结束。');
+            }
+        }
+
+        difficultySelect.addEventListener('change', (e) => {
+            currentDiff = e.target.value;
+            rows = configs[currentDiff].rows;
+            cols = configs[currentDiff].cols;
+            totalMines = configs[currentDiff].mines;
+            initGame();
+        });
+
+        resetBtn.addEventListener('click', initGame);
+
+        // 初始化加载
+        initGame();
+    </script>
+</body>
+</html>
