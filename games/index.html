@@ -3,209 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏中心 - 我的个人网站</title>
+    <title>GDFZ WEBS - Games 频道</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        /* 基础重置 */
+        /* ================= 基础重置 ================= */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa; /* 保持与主站一致的现代浅灰背景 */
             color: #333;
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* 导航栏样式 */
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        a {
+            text-decoration: none;
+            color: inherit;
         }
 
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* ================= 顶部导航栏 (与主页完全一致) ================= */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
+            padding: 0 5%;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
         }
 
-        nav .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        nav ul {
-            list-style: none;
+        .nav-brand {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 1px;
         }
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
+        .nav-brand img {
+            height: 30px;
+            width: auto;
+            border-radius: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 15px;
             font-weight: 500;
+            color: #555;
             transition: color 0.3s ease;
         }
 
-        nav ul li a:hover {
-            color: #3498db;
+        .nav-links a:hover {
+            color: #007aff;
+        }
+        
+        /* 突出显示当前所在的页面 */
+        .nav-links a.active {
+            color: #007aff;
+            font-weight: 700;
         }
 
-        nav ul li a.active {
-            color: #3498db;
-            border-bottom: 2px solid #3498db;
+        .nav-links .btn-primary {
+            background-color: #007aff;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s;
         }
 
-        /* 主体内容区域 */
-        main {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+        .nav-links .btn-primary:hover {
+            background-color: #0056b3;
+            color: white;
+            transform: translateY(-2px);
         }
 
+        /* ================= 页面头部 (精简版 Hero Section) ================= */
         .page-header {
-            margin-bottom: 30px;
+            margin-top: 70px; /* 避开固定导航栏 */
+            padding: 80px 5% 60px;
             text-align: center;
+            background: linear-gradient(135deg, #ffffff 0%, #eef2f3 100%);
         }
 
         .page-header h1 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            font-weight: 800;
+            color: #111;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #ff8a00, #e52e71); /* 游戏频道采用更活泼的渐变色 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .page-header p {
-            color: #666;
             font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        /* 游戏卡片网格布局 */
+        /* ================= 游戏列表区域 ================= */
+        .games-section {
+            padding: 60px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1; /* 撑开主体，推底页脚 */
+            width: 100%;
+        }
+
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            gap: 30px;
         }
 
-        /* 单个游戏卡片 */
+        /* 游戏卡片样式 (融合主页卡片风格) */
         .game-card {
-            background: white;
-            border-radius: 12px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f0f0f0;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
         }
 
         .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
         }
 
+        /* 游戏封面占位符 */
         .game-cover {
-            height: 160px;
-            background-color: #e0e6ed;
+            height: 180px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 3rem;
-            color: #a0aec0;
+            font-size: 3.5rem;
+            background-color: #f8f9fa;
         }
-
-        /* 为不同的游戏设置不同背景色作区分 */
-        .game-card:nth-child(1) .game-cover { background: #ffeaa7; color: #fdcb6e; }
-        .game-card:nth-child(2) .game-cover { background: #81ecec; color: #00cec9; }
-        .game-card:nth-child(3) .game-cover { background: #fab1a0; color: #e17055; }
-        .game-card:nth-child(4) .game-cover { background: #55efc4; color: #00b894; }
+        
+        /* 为封面添加一些活泼的渐变背景 */
+        .game-card:nth-child(1) .game-cover { background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); }
+        .game-card:nth-child(2) .game-cover { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .game-card:nth-child(3) .game-cover { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
+        .game-card:nth-child(4) .game-cover { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
 
         .game-info {
-            padding: 20px;
+            padding: 25px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            text-align: center;
         }
 
         .game-title {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
+            color: #333;
             margin-bottom: 10px;
-            color: #2d3748;
+            font-weight: 700;
         }
 
         .game-desc {
             font-size: 0.95rem;
-            color: #718096;
-            margin-bottom: 20px;
+            color: #666;
+            margin-bottom: 25px;
             flex-grow: 1;
         }
 
-        .play-btn {
+        /* 播放/开始按钮 */
+        .btn-play {
             display: inline-block;
-            text-align: center;
-            background-color: #3498db;
+            background-color: #007aff;
             color: white;
-            text-decoration: none;
-            padding: 10px 0;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
         }
 
-        .play-btn:hover {
-            background-color: #2980b9;
+        .btn-play:hover {
+            background-color: #0056b3;
+            box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
         }
         
-        .play-btn.disabled {
-            background-color: #cbd5e0;
+        .btn-play.disabled {
+            background-color: #e9ecef;
+            color: #adb5bd;
+            box-shadow: none;
             cursor: not-allowed;
-        }
-        .play-btn.disabled:hover {
-            background-color: #cbd5e0;
+            pointer-events: none; /* 禁用点击 */
         }
 
-        /* 页脚 */
-        footer {
+        /* ================= 巨型页脚 (与主页完全一致) ================= */
+        .footer {
+            background-color: #111;
+            color: #a0a0a0;
+            padding: 60px 5% 30px;
+            font-size: 0.9rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid #333;
+            padding-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-brand h2 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links-group h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-links-group ul {
+            list-style: none;
+        }
+
+        .footer-links-group ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links-group a {
+            transition: color 0.3s;
+        }
+
+        .footer-links-group a:hover {
+            color: #007aff;
+        }
+
+        .footer-bottom {
             text-align: center;
-            padding: 20px 0;
-            color: #7f8c8d;
-            margin-top: 40px;
-            border-top: 1px solid #ddd;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 2.2rem; }
+            .nav-links { display: none; }
+            .footer-content { flex-direction: column; gap: 40px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <nav>
-            <div class="logo">MySite</div>
-            <ul>
-                <li><a href="index.html">首页</a></li>
-                <li><a href="about.html">关于我</a></li>
-                <li><a href="games.html" class="active">游戏中心</a></li>
-            </ul>
-        </nav>
+    <!-- 顶部导航栏 (复用主页组件) -->
+    <nav class="navbar">
+        <a href="https://gdfz.dpdns.org" class="nav-brand">
+            <img src="/favicon.ico" alt="Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhZmYiIHJ4PSI4Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkc8L3RleHQ+PC9zdmc+'">
+            GDFZ WEBS
+        </a>
+        <div class="nav-links">
+            <a href="https://gdfz.dpdns.org">首页</a>
+            <!-- 给 Games 加上 active 类以高亮当前页面 -->
+            <a href="https://gdfz.dpdns.org/games" class="active">Games</a>
+            <a href="https://www.baidu.com" target="_blank">百度</a>
+            <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="btn-primary">GitHub</a>
+        </div>
+    </nav>
+
+    <!-- Games 页面专属 Header -->
+    <header class="page-header">
+        <h1>GDFZ 游戏大厅</h1>
+        <p>在浏览器中随时随地畅玩。目前页面正在施工中，敬请期待新游戏上线！</p>
     </header>
 
-    <main>
-        <div class="page-header">
-            <h1>游戏中心</h1>
-            <p>挑选一个你想玩的游戏，放松一下吧！</p>
-        </div>
-
+    <!-- 游戏列表区域 -->
+    <main class="games-section">
         <div class="games-grid">
             <!-- 游戏卡片 1 -->
             <div class="game-card">
                 <div class="game-cover">🐍</div>
                 <div class="game-info">
                     <h3 class="game-title">经典贪吃蛇</h3>
-                    <p class="game-desc">控制你的小蛇吃掉所有的食物，注意不要撞到墙壁或者自己的身体哦！</p>
-                    <a href="snake.html" class="play-btn">即将推出</a>
+                    <p class="game-desc">重温经典，挑战你的反应极限。目前引擎正在研发中。</p>
+                    <a href="#" class="btn-play disabled">即将推出</a>
                 </div>
             </div>
 
@@ -214,35 +330,60 @@
                 <div class="game-cover">🧩</div>
                 <div class="game-info">
                     <h3 class="game-title">俄罗斯方块</h3>
-                    <p class="game-desc">经典下落消除游戏，考验你的反应速度与空间规划能力。</p>
-                    <a href="tetris.html" class="play-btn">即将推出</a>
+                    <p class="game-desc">空间规划的终极考验，拼凑方块消除行数获取高分。</p>
+                    <a href="#" class="btn-play disabled">即将推出</a>
                 </div>
             </div>
 
             <!-- 游戏卡片 3 -->
             <div class="game-card">
-                <div class="game-cover">🔢</div>
+                <div class="game-cover">💥</div>
                 <div class="game-info">
-                    <h3 class="game-title">2048</h3>
-                    <p class="game-desc">滑动数字方块，相同的数字会合并，挑战合成最终的 2048！</p>
-                    <a href="2048.html" class="play-btn">即将推出</a>
+                    <h3 class="game-title">扫雷</h3>
+                    <p class="game-desc">锻炼逻辑思维，找出所有安全的格子，小心不要引爆地雷。</p>
+                    <a href="#" class="btn-play disabled">即将推出</a>
                 </div>
             </div>
 
             <!-- 游戏卡片 4 -->
             <div class="game-card">
-                <div class="game-cover">💣</div>
+                <div class="game-cover">✨</div>
                 <div class="game-info">
-                    <h3 class="game-title">扫雷</h3>
-                    <p class="game-desc">利用逻辑推理找出所有没有地雷的格子，小心不要踩到地雷。</p>
-                    <a href="minesweeper.html" class="play-btn">即将推出</a>
+                    <h3 class="game-title">神秘新作</h3>
+                    <p class="game-desc">DevTeam 正在秘密开发的全新多人联机小游戏项目。</p>
+                    <a href="#" class="btn-play disabled">研发中</a>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2026 MySite. 保留所有权利。</p>
+    <!-- 巨型页脚 (复用主页组件) -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>GDFZ WEBS</h2>
+                <p>由一群热爱编程与游戏的开发者组成的社区。致力于创造有趣、实用的网络体验。</p>
+            </div>
+            <div class="footer-links-group">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="https://gdfz.dpdns.org">主页</a></li>
+                    <li><a href="https://gdfz.dpdns.org/games">Games 频道</a></li>
+                    <li><a href="https://www.baidu.com" target="_blank">百度搜索</a></li>
+                </ul>
+            </div>
+            <div class="footer-links-group">
+                <h4>联系我们 (DevTeam)</h4>
+                <ul>
+                    <li><a href="mailto:pbcoding123@163.com">pbcoding123@163.com</a></li>
+                    <li><a href="mailto:zhengwenbang20140308@outlook.com">zhengwenbang20140308@outlook.com</a></li>
+                    <li><a href="https://github.com/pbcoding123/gdfz-web" target="_blank">GitHub 仓库</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <a href="https://github.com/pbcoding123/gdfz-web" style="color: #fff;">GDFZ WEBS DevTeam</a> 保留所有权利.</p>
+        </div>
     </footer>
 
 </body>
