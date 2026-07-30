@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GDFZ WEBS - 首页</title>
+    <title>GDFZ WEBS - 首页与导航大厅</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         /* ================= 基础重置 ================= */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: #f8f9fa;
@@ -22,241 +17,116 @@
             flex-direction: column;
             min-height: 100vh;
         }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        a { text-decoration: none; color: inherit; }
 
         /* ================= 顶部导航栏 ================= */
         .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 70px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 5%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 5%;
             background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
-            z-index: 1000;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05); z-index: 1000;
         }
-
         .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 22px;
-            font-weight: 700;
-            color: #1a1a1a;
-            letter-spacing: 1px;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 22px; font-weight: 700; color: #1a1a1a; letter-spacing: 1px;
         }
-
-        .nav-brand img {
-            height: 30px;
-            width: auto;
-            border-radius: 4px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            font-size: 15px;
-            font-weight: 500;
-            color: #555;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #007aff;
-        }
-
-        .nav-links a.active {
-            color: #007aff;
-            font-weight: 700;
-        }
-
-        .nav-links .btn-primary {
-            background-color: #007aff;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
+        .nav-brand img { height: 30px; width: auto; border-radius: 4px; }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a.nav-item { font-size: 15px; font-weight: 500; color: #555; transition: color 0.3s ease; }
+        .nav-links a.nav-item:hover { color: #007aff; }
+        .nav-links a.active { color: #007aff; font-weight: 700; }
+        
+        /* 用户面板与按钮 */
+        .user-panel { display: flex; align-items: center; gap: 15px; margin-left: 10px; padding-left: 20px; border-left: 1px solid #ddd; }
+        .user-info { font-size: 0.95rem; font-weight: 600; color: #333; display: flex; align-items: center; gap: 5px; }
+        .btn-auth {
+            background-color: #10b981; color: white; border: none; padding: 8px 20px;
+            border-radius: 20px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s;
         }
-
-        .nav-links .btn-primary:hover {
-            background-color: #0056b3;
-            color: white;
-            transform: translateY(-2px);
-        }
+        .btn-auth:hover { background-color: #059669; transform: translateY(-2px); }
+        .btn-logout { background: none; border: none; color: #ef4444; font-weight: 600; cursor: pointer; transition: color 0.2s; }
+        .btn-logout:hover { color: #b91c1c; text-decoration: underline; }
 
         /* ================= 主页核心区域 ================= */
         .home-main {
-            margin-top: 70px;
-            padding: 60px 20px;
-            flex: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin-top: 70px; padding: 60px 20px; flex: 1;
+            max-width: 1200px; width: 100%; margin-left: auto; margin-right: auto;
+            display: flex; flex-direction: column; align-items: center;
         }
-
-        .hero-section {
-            text-align: center;
-            margin-bottom: 50px;
-            max-width: 800px;
-        }
-
-        .hero-section h1 {
-            font-size: 3rem;
-            color: #111;
-            margin-bottom: 15px;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-
-        .hero-section p {
-            font-size: 1.2rem;
-            color: #666;
-            line-height: 1.5;
-        }
+        .hero-section { text-align: center; margin-bottom: 50px; max-width: 800px; }
+        .hero-section h1 { font-size: 3rem; color: #111; margin-bottom: 15px; font-weight: 800; letter-spacing: -1px; }
+        .hero-section p { font-size: 1.2rem; color: #666; line-height: 1.5; }
 
         /* 功能卡片网格 */
         .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            width: 100%;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px; width: 100%;
         }
-
         .feature-card {
-            background: white;
-            border-radius: 20px;
-            padding: 35px 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-            border: 1px solid #eaeaea;
+            background: white; border-radius: 20px; padding: 35px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #eaeaea;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-
-        .feature-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(0, 122, 255, 0.1);
-            border-color: #007aff;
-        }
-
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 12px;
-        }
-
-        .card-desc {
-            font-size: 0.95rem;
-            color: #666;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
+        .feature-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0, 122, 255, 0.1); border-color: #007aff; }
+        .card-icon { font-size: 3rem; margin-bottom: 20px; }
+        .card-title { font-size: 1.4rem; font-weight: 700; color: #111; margin-bottom: 12px; }
+        .card-desc { font-size: 0.95rem; color: #666; margin-bottom: 25px; line-height: 1.6; }
         .card-action {
-            align-self: flex-start;
-            background-color: #007aff;
-            color: white;
-            padding: 10px 24px;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
+            align-self: flex-start; background-color: #007aff; color: white;
+            padding: 10px 24px; border-radius: 20px; font-size: 0.95rem; font-weight: 600;
             transition: background-color 0.2s, transform 0.2s;
         }
+        .card-action:hover { background-color: #0056b3; transform: scale(1.03); }
 
-        .card-action:hover {
-            background-color: #0056b3;
-            color: white;
-            transform: scale(1.03);
+        /* ================= 登录/注册 模态弹框 ================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
         }
+        .modal {
+            background: white; padding: 35px; border-radius: 20px; width: 340px;
+            display: flex; flex-direction: column; gap: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        .modal h3 { text-align: center; color: #111; margin-bottom: 5px; font-size: 1.4rem; }
+        .modal input {
+            padding: 12px 15px; border: 1px solid #ddd; border-radius: 10px;
+            font-size: 1rem; outline: none; transition: border-color 0.2s;
+        }
+        .modal input:focus { border-color: #007aff; }
+        .modal-btns { display: flex; gap: 12px; margin-top: 5px; }
+        .modal-btns button {
+            flex: 1; padding: 12px; border: none; border-radius: 10px;
+            cursor: pointer; font-weight: 600; font-size: 1rem; transition: filter 0.2s;
+        }
+        .modal-btns button:hover { filter: brightness(0.9); }
+        .btn-login { background: #007aff; color: white; }
+        .btn-register { background: #10b981; color: white; }
+        .btn-cancel { background: #f1f3f5; color: #555; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .btn-cancel:hover { background: #e2e6ea; }
 
         /* ================= 巨型页脚 ================= */
         .footer {
-            background-color: #111;
-            color: #a0a0a0;
-            padding: 60px 5% 30px;
-            font-size: 0.9rem;
-            margin-top: 60px;
-            width: 100%;
+            background-color: #111; color: #a0a0a0; padding: 60px 5% 30px;
+            font-size: 0.9rem; margin-top: 60px; width: 100%;
         }
-
         .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
-            border-bottom: 1px solid #333;
-            padding-bottom: 40px;
-            margin-bottom: 30px;
+            display: flex; flex-wrap: wrap; justify-content: space-between;
+            max-width: 1200px; margin: 0 auto; border-bottom: 1px solid #333;
+            padding-bottom: 40px; margin-bottom: 30px;
         }
-
-        .footer-brand h2 {
-            color: #fff;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .footer-brand p {
-            max-width: 300px;
-            margin-bottom: 20px;
-        }
-
-        .footer-links-group h4 {
-            color: #fff;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-        }
-
-        .footer-links-group ul {
-            list-style: none;
-        }
-
-        .footer-links-group ul li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links-group a {
-            transition: color 0.3s;
-        }
-
-        .footer-links-group a:hover {
-            color: #007aff;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
+        .footer-brand h2 { color: #fff; margin-bottom: 15px; font-size: 1.5rem; }
+        .footer-brand p { max-width: 300px; margin-bottom: 20px; }
+        .footer-links-group h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; }
+        .footer-links-group ul { list-style: none; }
+        .footer-links-group ul li { margin-bottom: 12px; }
+        .footer-links-group a { transition: color 0.3s; }
+        .footer-links-group a:hover { color: #007aff; }
+        .footer-bottom { text-align: center; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; align-items: center; }
     </style>
 </head>
 <body>
@@ -268,10 +138,14 @@
             GDFZ WEBS
         </a>
         <div class="nav-links">
-            <a href="index.html" class="active">首页</a>
-            <a href="games.html">Games</a>
-            <a href="social.html">社交圈</a>
-            <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="btn-primary">GitHub</a>
+            <a href="index.html" class="nav-item active">首页</a>
+            <a href="games.html" class="nav-item">Games</a>
+            <a href="https://gdfz.dpdns.org/chat" class="nav-item">社交圈</a>
+            
+            <!-- 动态用户面板 -->
+            <div class="user-panel" id="userPanel">
+                <!-- 未登录时显示的内容将在 JS 中填充 -->
+            </div>
         </div>
     </nav>
 
@@ -288,9 +162,9 @@
                 <div>
                     <div class="card-icon">🎮</div>
                     <h3 class="card-title">趣味游戏大厅</h3>
-                    <p class="card-desc">汇聚经典贪吃蛇、升级版俄罗斯方块、多难度扫雷以及精选外链小游戏，带你随时随地重温童年与休闲时光。</p>
+                    <p class="card-desc">汇聚经典贪吃蛇、升级版俄罗斯方块、多难度扫雷以及精选外链小游戏。现在登录即可参与全网排名！</p>
                 </div>
-                <a href="https://gdfz.dpdns.org/games" class="card-action">进入游戏频道</a>
+                <a href="games.html" class="card-action">进入游戏频道</a>
             </div>
 
             <!-- 模块 2: 社交聊天圈 -->
@@ -308,9 +182,9 @@
                 <div>
                     <div class="card-icon">🚀</div>
                     <h3 class="card-title">GitHub 开源项目</h3>
-                    <p class="card-desc">本站所有前端源码完全开源！欢迎访问我们的 GitHub 仓库查看代码、提出建议或贡献代码。</p>
+                    <p class="card-desc">本站所有前端源码及 D1 数据库架构均对外展示！欢迎访问我们的 GitHub 仓库查看代码、提出建议。</p>
                 </div>
-                <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="card-action">访问 GitHub</a>
+                <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="card-action" style="background-color:#24292e;">访问 GitHub</a>
             </div>
         </div>
     </main>
@@ -327,7 +201,7 @@
                 <ul>
                     <li><a href="index.html">主页</a></li>
                     <li><a href="games.html">Games 频道</a></li>
-                    <li><a href="social.html">社交圈</a></li>
+                    <li><a href="https://gdfz.dpdns.org/chat">社交圈</a></li>
                 </ul>
             </div>
             <div class="footer-links-group">
@@ -344,5 +218,121 @@
         </div>
     </footer>
 
+    <!-- 全局登录/注册 弹窗 -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <h3>账号通行证</h3>
+            <input type="text" id="authUsername" placeholder="请输入用户名" autocomplete="off">
+            <input type="password" id="authPassword" placeholder="请输入密码">
+            <div class="modal-btns">
+                <button class="btn-login" onclick="handleAuth('login')">登录</button>
+                <button class="btn-register" onclick="handleAuth('register')">注册</button>
+            </div>
+            <button class="btn-cancel" onclick="closeAuthModal()">取消</button>
+        </div>
+    </div>
+
+    <!-- 账号系统逻辑脚本 -->
+    <script>
+        // 【注意】部署时请将此处的 API_BASE 替换为你自己的 Cloudflare Worker 域名
+        const API_BASE = 'https://your-worker-subdomain.workers.dev'; 
+        
+        let currentUser = null;
+
+        // 页面加载时检查本地是否已有登录态
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedUser = localStorage.getItem('gdfz_user');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+            }
+            updateUserUI();
+        });
+
+        // 刷新导航栏上的用户状态 UI
+        function updateUserUI() {
+            const userPanel = document.getElementById('userPanel');
+            if (currentUser) {
+                userPanel.innerHTML = `
+                    <div class="user-info">
+                        <span>👤</span>
+                        <span>${escapeHtml(currentUser.username)}</span>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">退出</button>
+                `;
+            } else {
+                userPanel.innerHTML = `
+                    <button class="btn-auth" onclick="openAuthModal()">登录 / 注册</button>
+                `;
+            }
+        }
+
+        // 弹窗控制
+        function openAuthModal() {
+            document.getElementById('authModal').style.display = 'flex';
+        }
+        
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('authUsername').value = '';
+            document.getElementById('authPassword').value = '';
+        }
+
+        // 处理登录与注册的网络请求
+        async function handleAuth(type) {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            
+            if(!username || !password) {
+                alert('账号和密码不能为空！');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/api/${type}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await res.json();
+
+                if (data.success) {
+                    if (type === 'login') {
+                        currentUser = data.user;
+                        localStorage.setItem('gdfz_user', JSON.stringify(currentUser));
+                        updateUserUI();
+                        closeAuthModal();
+                        alert('登录成功！欢迎回来，' + currentUser.username);
+                    } else {
+                        alert('注册成功！现在您可以直接点击登录。');
+                    }
+                } else {
+                    alert(data.msg || '操作失败，请检查账号密码。');
+                }
+            } catch (err) {
+                console.error('Auth Error:', err);
+                alert('网络请求失败，请确保 Cloudflare Worker API 已正确配置。');
+            }
+        }
+
+        // 退出登录逻辑
+        function logout() {
+            if(confirm('确定要退出当前账号吗？')) {
+                localStorage.removeItem('gdfz_user');
+                currentUser = null;
+                updateUserUI();
+            }
+        }
+
+        // 防注入转义函数
+        function escapeHtml(text) {
+            return String(text)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
 </body>
 </html>
