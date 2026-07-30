@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>经典贪吃蛇 - GDFZ WEBS 游戏频道</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* ================= 基础重置 ================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ================= 顶部导航栏 ================= */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+        }
+
+        .nav-brand img {
+            height: 30px;
+            width: auto;
+            border-radius: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 15px;
+            font-weight: 500;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #007aff;
+        }
+        
+        .nav-links a.active {
+            color: #007aff;
+            font-weight: 700;
+        }
+
+        .nav-links .btn-primary {
+            background-color: #007aff;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .nav-links .btn-primary:hover {
+            background-color: #0056b3;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ================= 游戏主体区域 ================= */
+        .game-main {
+            margin-top: 70px;
+            padding: 40px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .game-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .back-to-hall {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #007aff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            align-self: flex-start;
+        }
+        
+        .back-to-hall:hover {
+            text-decoration: underline;
+        }
+
+        canvas {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            display: block;
+            margin: 0 auto 20px auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .game-controls-tip {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn-game {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-game:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* ================= 巨型页脚 ================= */
+        .footer {
+            background-color: #111;
+            color: #a0a0a0;
+            padding: 60px 5% 30px;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid #333;
+            padding-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-brand h2 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links-group h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-links-group ul {
+            list-style: none;
+        }
+
+        .footer-links-group ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links-group a {
+            transition: color 0.3s;
+        }
+
+        .footer-links-group a:hover {
+            color: #007aff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <a href="https://gdfz.dpdns.org" class="nav-brand">
+            <img src="/favicon.ico" alt="Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhZmYiIHJ4PSI4Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkc8L3RleHQ+PC9zdmc+'">
+            GDFZ WEBS
+        </a>
+        <div class="nav-links">
+            <a href="https://gdfz.dpdns.org">首页</a>
+            <a href="games.html" class="active">Games</a>
+            <a href="https://www.baidu.com" target="_blank">百度</a>
+            <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="btn-primary">GitHub</a>
+        </div>
+    </nav>
+
+    <!-- 游戏主体 -->
+    <main class="game-main">
+        <div style="max-width: 500px; width: 100%;">
+            <a href="games.html" class="back-to-hall">&larr; 返回游戏大厅</a>
+        </div>
+        <div class="game-container">
+            <h2 style="margin-bottom: 15px; color: #111;">🐍 经典贪吃蛇</h2>
+            <div class="game-header-info">
+                <span>得分: <span id="score">0</span></span>
+                <span>最高分: <span id="high-score">0</span></span>
+            </div>
+            
+            <canvas id="snakeCanvas" width="400" height="400"></canvas>
+            
+            <div class="game-controls-tip">
+                使用键盘上的 <b>方向键 (↑ ↓ ← →)</b> 或 <b>WASD</b> 控制方向
+            </div>
+            
+            <button id="startBtn" class="btn-game">开始游戏</button>
+        </div>
+    </main>
+
+    <!-- 巨型页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>GDFZ WEBS</h2>
+                <p>由一群热爱编程与游戏的开发者组成的社区。致力于创造有趣、实用的网络体验。</p>
+            </div>
+            <div class="footer-links-group">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="https://gdfz.dpdns.org">主页</a></li>
+                    <li><a href="games.html">Games 频道</a></li>
+                    <li><a href="https://www.baidu.com" target="_blank">百度搜索</a></li>
+                </ul>
+            </div>
+            <div class="footer-links-group">
+                <h4>联系我们 (DevTeam)</h4>
+                <ul>
+                    <li><a href="mailto:pbcoding123@163.com">pbcoding123@163.com</a></li>
+                    <li><a href="mailto:zhengwenbang20140308@outlook.com">zhengwenbang20140308@outlook.com</a></li>
+                    <li><a href="https://github.com/pbcoding123/gdfz-web" target="_blank">GitHub 仓库</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <a href="https://github.com/pbcoding123/gdfz-web" style="color: #fff;">GDFZ WEBS DevTeam</a> 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <!-- 贪吃蛇游戏交互逻辑 -->
+    <script>
+        const canvas = document.getElementById('snakeCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const highScoreElement = document.getElementById('high-score');
+        const startBtn = document.getElementById('startBtn');
+
+        const gridSize = 20;
+        const tileCount = canvas.width / gridSize;
+
+        let snake = [];
+        let food = { x: 5, y: 5 };
+        let dx = 0;
+        let dy = 0;
+        let score = 0;
+        let highScore = 0;
+        let gameInterval = null;
+        let isRunning = false;
+
+        function initGame() {
+            snake = [
+                { x: 10, y: 10 },
+                { x: 9, y: 10 },
+                { x: 8, y: 10 }
+            ];
+            dx = 1;
+            dy = 0;
+            score = 0;
+            scoreElement.textContent = score;
+            spawnFood();
+        }
+
+        function spawnFood() {
+            food.x = Math.floor(Math.random() * tileCount);
+            food.y = Math.floor(Math.random() * tileCount);
+            // 确保食物不刷在蛇身上
+            snake.forEach(part => {
+                if (part.x === food.x && part.y === food.y) {
+                    spawnFood();
+                }
+            });
+        }
+
+        function main() {
+            if (hasGameEnded()) {
+                endGame();
+                return;
+            }
+            clearCanvas();
+            drawFood();
+            moveSnake();
+            drawSnake();
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = "#1a1a1a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawSnake() {
+            snake.forEach((part, index) => {
+                ctx.fillStyle = index === 0 ? "#007aff" : "#3b82f6";
+                ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+        }
+
+        function moveSnake() {
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreElement.textContent = score;
+                if (score > highScore) {
+                    highScore = score;
+                    highScoreElement.textContent = highScore;
+                }
+                spawnFood();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function drawFood() {
+            ctx.fillStyle = "#ef4444";
+            ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+        }
+
+        function hasGameEnded() {
+            const head = snake[0];
+            // 撞墙
+            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                return true;
+            }
+            // 撞自己
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            isRunning = false;
+            startBtn.textContent = "重新开始";
+            startBtn.disabled = false;
+            ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = "white";
+            ctx.font = "bold 24px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("游戏结束!", canvas.width / 2, canvas.height / 2 - 10);
+            
+            ctx.font = "16px sans-serif";
+            ctx.fillText("最终得分: " + score, canvas.width / 2, canvas.height / 2 + 25);
+        }
+
+        // 键盘控制事件
+        document.addEventListener('keydown', changeDirection);
+
+        function changeDirection(event) {
+            if (!isRunning) return;
+            const keyPressed = event.keyCode;
+            const LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40;
+            const W = 87, A = 65, S = 83, D = 68;
+
+            const goingUp = dy === -1;
+            const goingDown = dy === 1;
+            const goingRight = dx === 1;
+            const goingLeft = dx === -1;
+
+            if ((keyPressed === LEFT || keyPressed === A) && !goingRight) {
+                dx = -1; dy = 0;
+            }
+            if ((keyPressed === UP || keyPressed === W) && !goingDown) {
+                dx = 0; dy = -1;
+            }
+            if ((keyPressed === RIGHT || keyPressed === D) && !goingLeft) {
+                dx = 1; dy = 0;
+            }
+            if ((keyPressed === DOWN || keyPressed === S) && !goingUp) {
+                dx = 0; dy = 1;
+            }
+        }
+
+        startBtn.addEventListener('click', () => {
+            if (isRunning) return;
+            initGame();
+            isRunning = true;
+            startBtn.textContent = "游戏进行中...";
+            startBtn.disabled = true;
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(main, 100);
+        });
+
+        // 初始渲染一次画布静态画面
+        clearCanvas();
+        ctx.fillStyle = "#888";
+        ctx.font = "18px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("点击下方按钮开始游戏", canvas.width / 2, canvas.height / 2);
+    </script>
+</body>
+</html>
