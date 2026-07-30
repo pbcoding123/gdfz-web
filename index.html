@@ -1,9 +1,10 @@
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>导航与卡片页面</title>
+    <title>GDFZ WEBS</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         /* 基础重置 */
         * {
@@ -136,9 +137,10 @@ html_content = """<!DOCTYPE html>
 
     <!-- 标题导航栏 -->
     <nav class="navbar">
-        <div class="nav-left">ABC</div>
-        <div class="nav-right">
-            <a href="https://www.luogu.com.cn" target="_blank">洛谷</a>
+        <div class="nav-left">
+            <img src="/favicon.ico">
+            <a href="https://gdfz.dpdns.org">GDFZ</a>
+            <a href="https://gdfz.dpdns.org/games">Games</a>
             <a href="https://www.baidu.com" target="_blank">百度</a>
         </div>
     </nav>
@@ -146,33 +148,16 @@ html_content = """<!DOCTYPE html>
     <!-- 中间内容区域 -->
     <div class="main-container">
         <div class="card">
-            <h2>功能面板</h2>
-            <p>请选择你需要访问的模块（3x3 阵列）：</p>
-            
-            <!-- 3x3 按钮阵列 -->
-            <div class="button-grid">
-                <a href="#link1" class="btn">选项 1</a>
-                <a href="#link2" class="btn">选项 2</a>
-                <a href="#link3" class="btn">选项 3</a>
-                <a href="#link4" class="btn">选项 4</a>
-                <a href="#link5" class="btn">选项 5</a>
-                <a href="#link6" class="btn">选项 6</a>
-                <a href="#link7" class="btn">选项 7</a>
-                <a href="#link8" class="btn">选项 8</a>
-                <a href="#link9" class="btn">选项 9</a>
-            </div>
+            <h2>欢迎来到 GDFZ WEBS</h2>
+            <p>这里有一群蒟蒻！</p>
         </div>
     </div>
 
     <!-- 页脚区域 -->
     <footer class="footer">
-        <p>&copy; 2026 ABC 公司版权所有.</p>
-        <p>如需帮助，请联系 <a href="mailto:support@example.com">support@example.com</a></p>
+        <p>&copy; 2026 <a href="https://github.com/pbcoding123/gdfz-web">GDFZ WEBS DevTeam</a> 版权所有.</p>
+        <p>如需帮助，请联系 <a href="mailto:pbcoding123@163.com">pbcoding123@163.com</a> 或 <a href="mailto:zhengwenbang20140308@outlook.com">zhengwenbang20140308@outlook.com</a>a</p>
     </footer>
 
 </body>
 </html>
-"""
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-print("File saved as index.html")
