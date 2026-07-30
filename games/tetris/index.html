@@ -117,7 +117,7 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             border: 1px solid #f0f0f0;
-            max-width: 650px;
+            max-width: 750px;
             width: 100%;
             justify-content: center;
             flex-wrap: wrap;
@@ -131,19 +131,20 @@
             font-weight: 500;
             align-self: flex-start;
             width: 100%;
-            max-width: 650px;
+            max-width: 750px;
         }
         
         .back-to-hall:hover {
             text-decoration: underline;
         }
 
-        /* 游戏画布样式 */
+        /* 游戏画布样式：屏幕改大 */
         canvas {
             background-color: #111;
             border-radius: 12px;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
             display: block;
+            cursor: pointer;
         }
 
         /* 侧边栏控制与信息 */
@@ -151,7 +152,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 180px;
+            width: 200px;
         }
 
         .sidebar-panel {
@@ -268,14 +269,14 @@
             align-items: center;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .game-layout {
                 flex-direction: column;
                 align-items: center;
             }
             .game-sidebar {
                 width: 100%;
-                max-width: 300px;
+                max-width: 360px;
             }
         }
     </style>
@@ -291,16 +292,17 @@
         <div class="nav-links">
             <a href="https://gdfz.dpdns.org">首页</a>
             <a href="games.html" class="active">Games</a>
+            <a href="https://www.baidu.com" target="_blank">百度</a>
             <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="btn-primary">GitHub</a>
         </div>
     </nav>
 
     <!-- 游戏主体 -->
     <main class="game-main">
-        <a href="https://gdfz.dpdns.org/games" class="back-to-hall">&larr; 返回游戏大厅</a>
+        <a href="games.html" class="back-to-hall">&larr; 返回游戏大厅</a>
         <div class="game-layout">
-            <!-- 俄罗斯方块主画布：宽 300，高 600 (10列 20行) -->
-            <canvas id="tetris" width="300" height="600"></canvas>
+            <!-- 游戏画布放大：宽 360，高 720 (12列 24行) -->
+            <canvas id="tetris" width="360" height="720"></canvas>
             
             <!-- 侧边栏面板 -->
             <div class="game-sidebar">
@@ -322,7 +324,8 @@
                         ← / → : 左右移动<br>
                         ↑ : 旋转方块<br>
                         ↓ : 加速下落<br>
-                        空格 : 直接坠落
+                        空格 : 直接坠落<br>
+                        <i>💡 提示：点击画布也可开始</i>
                     </div>
                     <button id="startBtn" class="btn-game">开始游戏</button>
                 </div>
@@ -370,16 +373,18 @@
         // 放大渲染比例
         context.scale(30, 30);
 
-        // 方块图形矩阵及颜色定义
+        // 方块图形矩阵及颜色定义（扩展了更多方块种类）
         const colors = [
             null,
-            '#FF0D72', // I
-            '#0DC2FF', // J
-            '#0DFF72', // L
-            '#F538FF', // O
-            '#FF8E0D', // S
-            '#FFE138', // T
-            '#3877FF'  // Z
+            '#FF0D72', // 1: I
+            '#0DC2FF', // 2: J
+            '#0DFF72', // 3: L
+            '#F538FF', // 4: O
+            '#FF8E0D', // 5: S
+            '#FFE138', // 6: T
+            '#3877FF', // 7: Z
+            '#9C27B0', // 8: U (新增)
+            '#00BCD4'  // 9: W (新增)
         ];
 
         function createMatrix(w, h) {
@@ -433,6 +438,18 @@
                     [0, 7, 7],
                     [0, 0, 0],
                 ];
+            } else if (type === 'U') { // 新增 U 型方块
+                return [
+                    [8, 0, 8],
+                    [8, 8, 8],
+                    [0, 0, 0],
+                ];
+            } else if (type === 'W') { // 新增 W 型方块
+                return [
+                    [9, 0, 0],
+                    [9, 9, 0],
+                    [0, 9, 9],
+                ];
             }
         }
 
@@ -442,7 +459,6 @@
                     if (value !== 0) {
                         context.fillStyle = colors[value];
                         context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                        // 添加微弱的内部网格质感
                         context.strokeStyle = 'rgba(0,0,0,0.3)';
                         context.lineWidth = 0.05;
                         context.strokeRect(x + offset.x, y + offset.y, 1, 1);
@@ -540,7 +556,7 @@
         }
 
         function playerReset() {
-            const pieces = 'TJLOSZI';
+            const pieces = 'TJLOSZIUW'; // 包含新增加的方块种类
             player.matrix = createPiece(pieces[Math.floor(pieces.length * Math.random())]);
             player.pos.y = 0;
             player.pos.x = Math.floor((arena[0].length / 2) - (player.matrix[0].length / 2));
@@ -572,7 +588,7 @@
         }
 
         let dropCounter = 0;
-        let dropInterval = 1000; // 下落基础速度：1秒
+        let dropInterval = 500; // 速度改快：从 1000ms 加快至 500ms
         let lastTime = 0;
         let isRunning = false;
 
@@ -593,7 +609,8 @@
             linesElement.innerText = player.lines;
         }
 
-        const arena = createMatrix(10, 20);
+        // 地图改大：12列，24行
+        const arena = createMatrix(12, 24);
 
         const player = {
             pos: {x: 0, y: 0},
@@ -602,7 +619,11 @@
             lines: 0,
         };
 
+        // 阻止方向键和空格键的页面默认滚动行为
         document.addEventListener('keydown', event => {
+            if ([32, 37, 38, 39, 40].includes(event.keyCode)) {
+                event.preventDefault();
+            }
             if (!isRunning) return;
             if (event.keyCode === 37) {
                 playerMove(-1); // 左箭头
@@ -625,7 +646,7 @@
             }
         });
 
-        startBtn.addEventListener('click', () => {
+        function startGame() {
             if (isRunning) return;
             arena.forEach(row => row.fill(0));
             player.score = 0;
@@ -637,15 +658,24 @@
             startBtn.disabled = true;
             lastTime = performance.now();
             update();
+        }
+
+        startBtn.addEventListener('click', startGame);
+        
+        // 鼠标点击画布也可以直接开始游戏
+        canvas.addEventListener('click', () => {
+            if (!isRunning) {
+                startGame();
+            }
         });
 
         // 初始化静态画面
         context.fillStyle = '#111';
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = '#666';
-        context.font = "0.5px sans-serif";
+        context.fillStyle = '#888';
+        context.font = "0.7px sans-serif";
         context.textAlign = "center";
-        context.fillText("点击右侧按钮开始", 5, 10);
+        context.fillText("点击此处或下方按钮开始", canvas.width / 60, canvas.height / 60 / 2);
     </script>
 </body>
 </html>
