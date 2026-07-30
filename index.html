@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GDFZ WEBS - 探索我们的世界</title>
+    <title>GDFZ WEBS - 首页与导航大厅</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         /* ================= 基础重置 ================= */
@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f8f9fa; /* 更现代的浅灰背景 */
+            background-color: #f8f9fa;
             color: #333;
             line-height: 1.6;
             display: flex;
@@ -28,7 +28,7 @@
             color: inherit;
         }
 
-        /* ================= 顶部导航栏 (现代化毛玻璃悬浮) ================= */
+        /* ================= 顶部导航栏 ================= */
         .navbar {
             position: fixed;
             top: 0;
@@ -40,7 +40,7 @@
             align-items: center;
             padding: 0 5%;
             background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+            backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
             z-index: 1000;
@@ -76,10 +76,14 @@
         }
 
         .nav-links a:hover {
-            color: #007aff; /* 现代感主题蓝 */
+            color: #007aff;
+        }
+        
+        .nav-links a.active {
+            color: #007aff;
+            font-weight: 700;
         }
 
-        /* 特殊样式的按钮链接（例如主要行动点） */
         .nav-links .btn-primary {
             background-color: #007aff;
             color: white;
@@ -94,125 +98,100 @@
             transform: translateY(-2px);
         }
 
-        /* ================= 主视觉区域 (Hero Section) ================= */
-        .hero {
-            margin-top: 70px; /* 避开固定的导航栏 */
-            padding: 100px 5% 80px;
-            text-align: center;
-            background: linear-gradient(135deg, #ffffff 0%, #eef2f3 100%);
+        /* ================= 主页核心区域 ================= */
+        .home-main {
+            margin-top: 70px;
+            padding: 60px 20px;
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+            max-width: 800px;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
             color: #111;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-weight: 800;
             letter-spacing: -1px;
-            background: linear-gradient(90deg, #007aff, #00d2ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
-        .hero p {
+        .hero-section p {
             font-size: 1.2rem;
             color: #666;
-            max-width: 600px;
-            margin-bottom: 40px;
+            line-height: 1.5;
         }
 
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-        }
-
-        .btn-large {
-            display: inline-block;
-            padding: 14px 32px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-large.primary {
-            background-color: #007aff;
-            color: #fff;
-            box-shadow: 0 8px 20px rgba(0, 122, 255, 0.3);
-        }
-
-        .btn-large.primary:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0, 122, 255, 0.4);
-        }
-
-        .btn-large.secondary {
-            background-color: white;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-
-        .btn-large.secondary:hover {
-            border-color: #bbb;
-            background-color: #f8f9fa;
-            transform: translateY(-3px);
-        }
-
-        /* ================= 内容区 (功能/模块展示) ================= */
-        .features-section {
-            padding: 80px 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-            flex: 1; /* 撑开主体内容，把页脚推到底部 */
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 50px;
-            color: #222;
-        }
-
-        .grid-container {
+        /* 功能卡片网格 */
+        .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
+            width: 100%;
         }
 
-        /* 现代化卡片 */
-        .card {
-            background-color: white;
-            padding: 40px 30px;
+        .feature-card {
+            background: white;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            padding: 35px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid #eaeaea;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
-            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(0, 122, 255, 0.1);
+            border-color: #007aff;
         }
 
         .card-icon {
-            font-size: 40px;
+            font-size: 3rem;
             margin-bottom: 20px;
         }
 
-        .card h3 {
+        .card-title {
             font-size: 1.4rem;
-            color: #333;
-            margin-bottom: 15px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 12px;
         }
 
-        .card p {
-            color: #666;
+        .card-desc {
             font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .card-action {
+            align-self: flex-start;
+            background-color: #007aff;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .card-action:hover {
+            background-color: #0056b3;
+            color: white;
+            transform: scale(1.03);
         }
 
         /* ================= 巨型页脚 ================= */
@@ -221,6 +200,8 @@
             color: #a0a0a0;
             padding: 60px 5% 30px;
             font-size: 0.9rem;
+            margin-top: 60px;
+            width: 100%;
         }
 
         .footer-content {
@@ -276,68 +257,65 @@
             gap: 10px;
             align-items: center;
         }
-
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .nav-links { display: none; } /* 移动端可隐藏或做成汉堡菜单，此处简化隐藏 */
-            .footer-content { flex-direction: column; gap: 40px; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- 顶部导航栏 (固定、毛玻璃) -->
+    <!-- 顶部导航栏 -->
     <nav class="navbar">
-        <a href="https://gdfz.dpdns.org" class="nav-brand">
-            <!-- 加上了默认占位图标，如果你本地没有favicon.ico也能正常显示 -->
+        <a href="index.html" class="nav-brand">
             <img src="/favicon.ico" alt="Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhZmYiIHJ4PSI4Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkc8L3RleHQ+PC9zdmc+'">
             GDFZ WEBS
         </a>
         <div class="nav-links">
-            <a href="https://gdfz.dpdns.org">首页</a>
-            <a href="https://gdfz.dpdns.org/games">Games</a>
-            <a href="https://www.baidu.com" target="_blank">百度</a>
+            <a href="index.html" class="active">首页</a>
+            <a href="games.html">Games</a>
+            <a href="social.html">社交圈</a>
             <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="btn-primary">GitHub</a>
         </div>
     </nav>
 
-    <!-- 主视觉区域 (Hero Banner) -->
-    <header class="hero">
-        <h1>欢迎来到 GDFZ WEBS</h1>
-        <p>这里有一群充满热情的蒟蒻！探索我们的开源项目、体验我们开发的网页游戏，与社区一起成长。</p>
-        <div class="hero-buttons">
-            <a href="https://gdfz.dpdns.org/games" class="btn-large primary">开始体验 Games</a>
-            <a href="#about" class="btn-large secondary">了解更多</a>
-        </div>
-    </header>
+    <!-- 主页核心内容 -->
+    <main class="home-main">
+        <section class="hero-section">
+            <h1>欢迎来到 GDFZ WEBS</h1>
+            <p>由热爱编程与游戏的开发者们共同打造的社区导航中心。在这里畅玩精选小游戏，或与社区伙伴实时互动交流！</p>
+        </section>
 
-    <!-- 主体内容区 (卡片展示阵列) -->
-    <main class="features-section" id="about">
-        <h2 class="section-title">发现我们的项目</h2>
-        <div class="grid-container">
-            <!-- 卡片 1 -->
-            <div class="card">
-                <div class="card-icon">🚀</div>
-                <h3>GDFZ 主站</h3>
-                <p>提供最新资讯、资源分享与社区交流的聚集地。这里是我们一切项目的起点。</p>
+        <div class="features-grid">
+            <!-- 模块 1: 游戏频道 -->
+            <div class="feature-card">
+                <div>
+                    <div class="card-icon">🎮</div>
+                    <h3 class="card-title">趣味游戏大厅</h3>
+                    <p class="card-desc">汇聚经典贪吃蛇、升级版俄罗斯方块、多难度扫雷以及精选外链小游戏，带你随时随地重温童年与休闲时光。</p>
+                </div>
+                <a href="games.html" class="card-action">进入游戏频道</a>
             </div>
-            <!-- 卡片 2 -->
-            <div class="card">
-                <div class="card-icon">🎮</div>
-                <h3>网页游戏</h3>
-                <p>由 GDFZ DevTeam 倾力打造的休闲网页游戏合集，随时随地在浏览器中畅玩。</p>
+
+            <!-- 模块 2: 社交聊天圈 -->
+            <div class="feature-card">
+                <div>
+                    <div class="card-icon">💬</div>
+                    <h3 class="card-title">社交动态圈 (Chat)</h3>
+                    <p class="card-desc">专属的开发者与访客交流社区。在这里发布新鲜动态、分享战绩或点赞互动，寻找志同道合的伙伴！</p>
+                </div>
+                <a href="social.html" class="card-action">进入社交圈</a>
             </div>
-            <!-- 卡片 3 -->
-            <div class="card">
-                <div class="card-icon">💻</div>
-                <h3>开源共建</h3>
-                <p>拥抱开源，我们的代码托管在 GitHub 上，欢迎提交 PR 与 Issue，加入我们的行列！</p>
+
+            <!-- 模块 3: 开源仓库 -->
+            <div class="feature-card">
+                <div>
+                    <div class="card-icon">🚀</div>
+                    <h3 class="card-title">GitHub 开源项目</h3>
+                    <p class="card-desc">本站所有前端源码完全开源！欢迎访问我们的 GitHub 仓库查看代码、提出建议或贡献代码。</p>
+                </div>
+                <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="card-action">访问 GitHub</a>
             </div>
         </div>
     </main>
 
-    <!-- 大型现代化页脚 -->
+    <!-- 巨型页脚 -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-brand">
@@ -347,8 +325,9 @@
             <div class="footer-links-group">
                 <h4>快速链接</h4>
                 <ul>
-                    <li><a href="https://gdfz.dpdns.org">主页</a></li>
-                    <li><a href="https://gdfz.dpdns.org/games">Games 频道</a></li>
+                    <li><a href="index.html">主页</a></li>
+                    <li><a href="games.html">Games 频道</a></li>
+                    <li><a href="social.html">社交圈</a></li>
                 </ul>
             </div>
             <div class="footer-links-group">
