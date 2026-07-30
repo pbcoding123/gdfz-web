@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>经典俄罗斯方块 - GDFZ WEBS 游戏频道</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* ================= 基础重置 ================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ================= 顶部导航栏 ================= */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+        }
+
+        .nav-brand img {
+            height: 30px;
+            width: auto;
+            border-radius: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 15px;
+            font-weight: 500;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #007aff;
+        }
+        
+        .nav-links a.active {
+            color: #007aff;
+            font-weight: 700;
+        }
+
+        .nav-links .btn-primary {
+            background-color: #007aff;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .nav-links .btn-primary:hover {
+            background-color: #0056b3;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ================= 游戏主体区域 ================= */
+        .game-main {
+            margin-top: 70px;
+            padding: 40px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-layout {
+            display: flex;
+            gap: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+            max-width: 650px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .back-to-hall {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #007aff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            align-self: flex-start;
+            width: 100%;
+            max-width: 650px;
+        }
+        
+        .back-to-hall:hover {
+            text-decoration: underline;
+        }
+
+        /* 游戏画布样式 */
+        canvas {
+            background-color: #111;
+            border-radius: 12px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            display: block;
+        }
+
+        /* 侧边栏控制与信息 */
+        .game-sidebar {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 180px;
+        }
+
+        .sidebar-panel {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .sidebar-panel h3 {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-panel .value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #111;
+        }
+
+        .btn-game {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 12px 0;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .btn-game:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .controls-tip {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.4;
+            text-align: left;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* ================= 巨型页脚 ================= */
+        .footer {
+            background-color: #111;
+            color: #a0a0a0;
+            padding: 60px 5% 30px;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid #333;
+            padding-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-brand h2 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links-group h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-links-group ul {
+            list-style: none;
+        }
+
+        .footer-links-group ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links-group a {
+            transition: color 0.3s;
+        }
+
+        .footer-links-group a:hover {
+            color: #007aff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        @media (max-width: 600px) {
+            .game-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            .game-sidebar {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <a href="https://gdfz.dpdns.org" class="nav-brand">
+            <img src="/favicon.ico" alt="Logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiMwMDdhZmYiIHJ4PSI4Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2ZmZiIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkc8L3RleHQ+PC9zdmc+'">
+            GDFZ WEBS
+        </a>
+        <div class="nav-links">
+            <a href="https://gdfz.dpdns.org">首页</a>
+            <a href="games.html" class="active">Games</a>
+            <a href="https://github.com/pbcoding123/gdfz-web" target="_blank" class="btn-primary">GitHub</a>
+        </div>
+    </nav>
+
+    <!-- 游戏主体 -->
+    <main class="game-main">
+        <a href="https://gdfz.dpdns.org/games" class="back-to-hall">&larr; 返回游戏大厅</a>
+        <div class="game-layout">
+            <!-- 俄罗斯方块主画布：宽 300，高 600 (10列 20行) -->
+            <canvas id="tetris" width="300" height="600"></canvas>
+            
+            <!-- 侧边栏面板 -->
+            <div class="game-sidebar">
+                <div>
+                    <h2 style="font-size: 1.2rem; margin-bottom: 12px; color: #111;">🧩 俄罗斯方块</h2>
+                    <div class="sidebar-panel">
+                        <h3>当前得分</h3>
+                        <div class="value" id="score">0</div>
+                    </div>
+                    <div class="sidebar-panel">
+                        <h3>消除行数</h3>
+                        <div class="value" id="lines">0</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="controls-tip" style="margin-bottom: 15px;">
+                        <b>操作指南：</b><br>
+                        ← / → : 左右移动<br>
+                        ↑ : 旋转方块<br>
+                        ↓ : 加速下落<br>
+                        空格 : 直接坠落
+                    </div>
+                    <button id="startBtn" class="btn-game">开始游戏</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 巨型页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>GDFZ WEBS</h2>
+                <p>由一群热爱编程与游戏的开发者组成的社区。致力于创造有趣、实用的网络体验。</p>
+            </div>
+            <div class="footer-links-group">
+                <h4>快速链接</h4>
+                <ul>
+                    <li><a href="https://gdfz.dpdns.org">主页</a></li>
+                    <li><a href="games.html">Games 频道</a></li>
+                    <li><a href="https://www.baidu.com" target="_blank">百度搜索</a></li>
+                </ul>
+            </div>
+            <div class="footer-links-group">
+                <h4>联系我们 (DevTeam)</h4>
+                <ul>
+                    <li><a href="mailto:pbcoding123@163.com">pbcoding123@163.com</a></li>
+                    <li><a href="mailto:zhengwenbang20140308@outlook.com">zhengwenbang20140308@outlook.com</a></li>
+                    <li><a href="https://github.com/pbcoding123/gdfz-web" target="_blank">GitHub 仓库</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <a href="https://github.com/pbcoding123/gdfz-web" style="color: #fff;">GDFZ WEBS DevTeam</a> 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <!-- 俄罗斯方块核心交互逻辑 -->
+    <script>
+        const canvas = document.getElementById('tetris');
+        const context = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const linesElement = document.getElementById('lines');
+        const startBtn = document.getElementById('startBtn');
+
+        // 放大渲染比例
+        context.scale(30, 30);
+
+        // 方块图形矩阵及颜色定义
+        const colors = [
+            null,
+            '#FF0D72', // I
+            '#0DC2FF', // J
+            '#0DFF72', // L
+            '#F538FF', // O
+            '#FF8E0D', // S
+            '#FFE138', // T
+            '#3877FF'  // Z
+        ];
+
+        function createMatrix(w, h) {
+            const matrix = [];
+            while (h--) {
+                matrix.push(new Array(w).fill(0));
+            }
+            return matrix;
+        }
+
+        function createPiece(type) {
+            if (type === 'T') {
+                return [
+                    [0, 6, 0],
+                    [6, 6, 6],
+                    [0, 0, 0],
+                ];
+            } else if (type === 'O') {
+                return [
+                    [4, 4],
+                    [4, 4],
+                ];
+            } else if (type === 'L') {
+                return [
+                    [0, 0, 3],
+                    [3, 3, 3],
+                    [0, 0, 0],
+                ];
+            } else if (type === 'J') {
+                return [
+                    [2, 0, 0],
+                    [2, 2, 2],
+                    [0, 0, 0],
+                ];
+            } else if (type === 'I') {
+                return [
+                    [0, 0, 0, 0],
+                    [1, 1, 1, 1],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                ];
+            } else if (type === 'S') {
+                return [
+                    [0, 5, 5],
+                    [5, 5, 0],
+                    [0, 0, 0],
+                ];
+            } else if (type === 'Z') {
+                return [
+                    [7, 7, 0],
+                    [0, 7, 7],
+                    [0, 0, 0],
+                ];
+            }
+        }
+
+        function drawMatrix(matrix, offset) {
+            matrix.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if (value !== 0) {
+                        context.fillStyle = colors[value];
+                        context.fillRect(x + offset.x, y + offset.y, 1, 1);
+                        // 添加微弱的内部网格质感
+                        context.strokeStyle = 'rgba(0,0,0,0.3)';
+                        context.lineWidth = 0.05;
+                        context.strokeRect(x + offset.x, y + offset.y, 1, 1);
+                    }
+                });
+            });
+        }
+
+        function draw() {
+            context.fillStyle = '#111';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawMatrix(arena, {x: 0, y: 0});
+            drawMatrix(player.matrix, player.pos);
+        }
+
+        function merge(arena, player) {
+            player.matrix.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if (value !== 0) {
+                        arena[y + player.pos.y][x + player.pos.x] = value;
+                    }
+                });
+            });
+        }
+
+        function rotate(matrix, dir) {
+            for (let y = 0; y < matrix.length; ++y) {
+                for (let x = 0; x < y; ++x) {
+                    [
+                        matrix[x][y],
+                        matrix[y][x],
+                    ] = [
+                        matrix[y][x],
+                        matrix[x][y],
+                    ];
+                }
+            }
+            if (dir > 0) {
+                matrix.forEach(row => row.reverse());
+            } else {
+                matrix.reverse();
+            }
+        }
+
+        function arenaSweep() {
+            let rowCount = 1;
+            outer: for (let y = arena.length - 1; y > 0; --y) {
+                for (let x = 0; x < arena[y].length; ++x) {
+                    if (arena[y][x] === 0) {
+                        continue outer;
+                    }
+                }
+                const row = arena.splice(y, 1)[0].fill(0);
+                arena.unshift(row);
+                ++y;
+
+                player.score += rowCount * 10;
+                player.lines += 1;
+                rowCount *= 2;
+            }
+            updateScore();
+        }
+
+        function collide(arena, player) {
+            const m = player.matrix;
+            const o = player.pos;
+            for (let y = 0; y < m.length; ++y) {
+                for (let x = 0; x < m[y].length; ++x) {
+                    if (m[y][x] !== 0 &&
+                       (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function playerDrop() {
+            player.pos.y++;
+            if (collide(arena, player)) {
+                player.pos.y--;
+                merge(arena, player);
+                playerReset();
+                arenaSweep();
+            }
+            dropCounter = 0;
+        }
+
+        function playerMove(dir) {
+            player.pos.x += dir;
+            if (collide(arena, player)) {
+                player.pos.x -= dir;
+            }
+        }
+
+        function playerReset() {
+            const pieces = 'TJLOSZI';
+            player.matrix = createPiece(pieces[Math.floor(pieces.length * Math.random())]);
+            player.pos.y = 0;
+            player.pos.x = Math.floor((arena[0].length / 2) - (player.matrix[0].length / 2));
+            
+            if (collide(arena, player)) {
+                arena.forEach(row => row.fill(0));
+                player.score = 0;
+                player.lines = 0;
+                updateScore();
+                isRunning = false;
+                startBtn.textContent = "重新开始";
+                startBtn.disabled = false;
+            }
+        }
+
+        function playerRotate(dir) {
+            const pos = player.pos.x;
+            let offset = 1;
+            rotate(player.matrix, dir);
+            while (collide(arena, player)) {
+                player.pos.x += offset;
+                offset = -(offset + (offset > 0 ? 1 : -1));
+                if (offset > player.matrix[0].length) {
+                    rotate(player.matrix, -dir);
+                    player.pos.x = pos;
+                    return;
+                }
+            }
+        }
+
+        let dropCounter = 0;
+        let dropInterval = 1000; // 下落基础速度：1秒
+        let lastTime = 0;
+        let isRunning = false;
+
+        function update(time = 0) {
+            if (!isRunning) return;
+            const deltaTime = time - lastTime;
+            lastTime = time;
+            dropCounter += deltaTime;
+            if (dropCounter > dropInterval) {
+                playerDrop();
+            }
+            draw();
+            requestAnimationFrame(update);
+        }
+
+        function updateScore() {
+            scoreElement.innerText = player.score;
+            linesElement.innerText = player.lines;
+        }
+
+        const arena = createMatrix(10, 20);
+
+        const player = {
+            pos: {x: 0, y: 0},
+            matrix: null,
+            score: 0,
+            lines: 0,
+        };
+
+        document.addEventListener('keydown', event => {
+            if (!isRunning) return;
+            if (event.keyCode === 37) {
+                playerMove(-1); // 左箭头
+            } else if (event.keyCode === 39) {
+                playerMove(1);  // 右箭头
+            } else if (event.keyCode === 40) {
+                playerDrop();   // 下箭头加速
+            } else if (event.keyCode === 38) {
+                playerRotate(1); // 上箭头旋转
+            } else if (event.keyCode === 32) {
+                // 空格直接落到底
+                while (!collide(arena, player)) {
+                    player.pos.y++;
+                }
+                player.pos.y--;
+                merge(arena, player);
+                playerReset();
+                arenaSweep();
+                dropCounter = 0;
+            }
+        });
+
+        startBtn.addEventListener('click', () => {
+            if (isRunning) return;
+            arena.forEach(row => row.fill(0));
+            player.score = 0;
+            player.lines = 0;
+            updateScore();
+            playerReset();
+            isRunning = true;
+            startBtn.textContent = "游戏进行中...";
+            startBtn.disabled = true;
+            lastTime = performance.now();
+            update();
+        });
+
+        // 初始化静态画面
+        context.fillStyle = '#111';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = '#666';
+        context.font = "0.5px sans-serif";
+        context.textAlign = "center";
+        context.fillText("点击右侧按钮开始", 5, 10);
+    </script>
+</body>
+</html>
